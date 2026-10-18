@@ -184,11 +184,11 @@ const EXAM_CONFIG = {
   examTitle: 'MIDTERM EXAMINATION – Analytics Application',
   academicPeriod: 'First Semester, A.Y. 2026–2027',
   sections: ['BSIT BA 4101', 'BSIT BA 4102', 'BSIT BA 4103'],
-  officialExamLabel: 'October 19, 2026 — Test closes at 12:00 AM',
-  // No browser-side start-date activation. The server enforces the closing deadline.
-  dateLock: { enabled: false, start: '2026-10-18T22:50:00+08:00', end: '2026-10-19T00:00:00+08:00' },
+  officialExamLabel: 'October 21, 2026 — 10:00 AM to 11:00 AM',
+  // Browser display restriction supplements (does not replace) server-side start and close checks.
+  dateLock: { enabled: true, start: '2026-10-21T10:00:00+08:00', end: '2026-10-21T11:00:00+08:00' },
   // Optional countdown; auto-submits at 0:00 when enabled.
-  timer: { enabled: true, minutes: 10 },
+  timer: { enabled: true, minutes: 60 },
   shuffleChoices: true,                             // shuffle MCQ options and matching dropdown options
   antiCheat: {
     enabled: true,                                  // set false to turn off all monitoring
@@ -263,7 +263,7 @@ function renderIntro(msg){
       <li>Use Previous / Next or the item numbers to move around.</li>
       <li>Change answers anytime before submitting. Use “Mark for Review” to flag items.</li>
       <li>Unanswered items earn zero.</li>
-      <li>After submission, save your Reference ID. Your score, rating and PDF become available at 12:00 AM.</li>
+      <li>After submission, save your Reference ID. Your score, rating and PDF become available at 11:00 AM.</li>
     </ul>
     <h3>Examination rules (best-effort monitoring)</h3>
     <ul class="rules">
@@ -272,7 +272,7 @@ function renderIntro(msg){
       <li>Manually locking your phone, tablet, or computer will be treated the same as leaving the examination screen and will count as a violation.</li>
       <li>You must use only one device throughout the examination. Switching between devices is strictly prohibited.</li>
     </ul>
-    <div class="notice blue"><b>Your result is a downloadable PDF after 12:00 AM.</b> After submitting your exam, use the same device and browser to download your Result Slip. Do not clear your browsing data until you have successfully downloaded and saved the file. Once saved, upload your Result Slip to Google Classroom as proof of completion.${storageOK?'':' <b>Browser storage is unavailable, so duplicate-attempt checks will not persist.</b>'}</div>
+    <div class="notice blue"><b>Your result is a downloadable PDF at 11:00 AM.</b> After submitting your exam, use the same device and browser to download your Result Slip. Do not clear your browsing data until you have successfully downloaded and saved the file. Once saved, upload your Result Slip to Google Classroom as proof of completion.${storageOK?'':' <b>Browser storage is unavailable, so duplicate-attempt checks will not persist.</b>'}</div>
   </section>
   <section class="card">
     <h2>Student details</h2>
@@ -296,7 +296,7 @@ function renderIntro(msg){
     </div>
   </section>
   <section class="card"><h2>Retrieve Result Slip</h2>
-    <p class="muted">For submitted examinations only. Available October 19, 2026 at 12:00 AM Philippine Time. This does not create another exam attempt.</p>
+    <p class="muted">For submitted examinations only. Available October 21, 2026 at 11:00 AM Philippine Time. This does not create another exam attempt.</p>
     <label class="f" for="retSR">SR Code</label><input id="retSR" type="text" autocomplete="off">
     <label class="f" for="retCode">Exam Access Code</label><input id="retCode" type="text" autocomplete="off">
     <label class="f" for="retRef">Submission Reference ID</label><input id="retRef" type="text" autocomplete="off">
@@ -319,7 +319,7 @@ async function retrieveResult(){
   msg.textContent='Checking your submission...';
   const res=await serverCall({action:'retrieve',sr,code,ref},25000);
   if(!res||!res.ok){msg.textContent=(res&&res.error)||'Unable to verify result. Please try again.';return;}
-  if(res.locked){msg.textContent='Results are locked until October 19, 2026, 12:00 AM Philippine Time.';return;}
+  if(res.locked){msg.textContent='Results are locked until October 21, 2026, 11:00 AM Philippine Time.';return;}
   showSubmitted(Object.assign({},res.result,{retrieval:{sr,code,ref}}));
 }
 function setErr(id,t){ $('#'+id).textContent=t||''; }
@@ -731,12 +731,12 @@ function showSubmitted(r){
   const banner=r.status==='Submitted'?'Examination successfully submitted. Your answers are permanently locked.':esc(r.status)+'. Your examination attempt is permanently locked.';
   $('#app').innerHTML=`<main class="wrap"><section class="card">
     <div class="notice green"><b>${banner}</b></div>
-    <h2>${locked?'Result Slip available at 12:00 AM':'Examination Result Slip'}</h2>
-    <p>${locked?'Your score, rating and PDF are locked until October 19, 2026 at 12:00 AM (Philippine Time). You may close this page after submission confirmation and return later.':'Your examination has been recorded. You may download your result PDF below.'}</p>
+    <h2>${locked?'Result Slip available at 11:00 AM':'Examination Result Slip'}</h2>
+    <p>${locked?'Your score, rating and PDF are locked until October 21, 2026 at 11:00 AM (Philippine Time). You may close this page after submission confirmation and return later.':'Your examination has been recorded. You may download your result PDF below.'}</p>
     ${locked?'':'<div class="row"><button class="btn green" id="btnDl" type="button">Download Result PDF</button></div>'}
     <div id="dlMsg" role="status"></div>
     <table class="meta"><tr><th>Student</th><td>${esc(r.name)}</td></tr><tr><th>SR Code</th><td>${esc(r.sr)}</td></tr><tr><th>Section</th><td>${esc(r.section)}</td></tr><tr><th>Reference ID</th><td><b>${esc(r.ref)}</b></td></tr><tr><th>Submission Status</th><td>${esc(r.status)}</td></tr></table>
-    <div class="notice blue"><b>Keep your Reference ID.</b> To return after 12:00 AM, use “Retrieve Result Slip” with your SR Code, access code and Reference ID. Retrieving a result does not permit another attempt.</div>
+    <div class="notice blue"><b>Keep your Reference ID.</b> To return at 11:00 AM, use “Retrieve Result Slip” with your SR Code, access code and Reference ID. Retrieving a result does not permit another attempt.</div>
     <button class="btn gray" id="btnHome" type="button">Return to Login / Retrieval</button>
   </section></main>`;
   const dl=$('#btnDl');if(dl)dl.onclick=()=>downloadResult(lastResult);
@@ -746,8 +746,13 @@ async function downloadResult(r){
   const msg=$('#dlMsg');msg.innerHTML='<div class="notice blue">Checking release time with server…</div>';
   const res=r.retrieval?await serverCall({action:'retrieve',...r.retrieval},25000):await serverCall({action:'result',sr:r.sr,token:r.token},25000);
   if(!res||!res.ok){msg.textContent=(res&&res.error)||'Unable to retrieve your result. Please retry.';return;}
-  if(res.locked||res.result?.resultsLocked){msg.textContent='Result slips are locked until 12:00 AM Philippine Time.';return;}
-  const full=Object.assign({},res.result,{exam:C.examTitle,course:C.course,facilitator:C.facilitator,period:C.academicPeriod,examDate:C.officialExamLabel,items:null,reviewNote:'Correct answers and explanations are not released.'});
+  if(res.locked||res.result?.resultsLocked){msg.textContent='Result slips are locked until 11:00 AM Philippine Time.';return;}
+  const terminated=/Terminated/i.test(String(res.result.status||''));
+   const full=Object.assign({},res.result,{exam:C.examTitle,course:C.course,facilitator:C.facilitator,period:C.academicPeriod,examDate:C.officialExamLabel,
+     items:terminated?null:(Array.isArray(res.review)?res.review:null),
+     reviewNote:terminated?'Examination terminated. Questions, answers, and explanations are withheld under the examination policy.':
+       'The detailed review is not yet available. Please contact your facilitator.'});
+   if(!terminated && !Array.isArray(res.review)){msg.textContent='Detailed review is unavailable. Please try again or contact your facilitator.';return;}
   try {const blob=buildResultPDF(full),url=URL.createObjectURL(blob),name='BAT405_Midterm_Result_'+r.sr.replace(/[^A-Za-z0-9_-]+/g,'_')+'.pdf';
     const a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();
     msg.innerHTML='<div class="notice green">Result PDF generated. Check your Downloads folder.</div>';
@@ -823,16 +828,17 @@ function buildResultPDF(r){
   y+=16;
 
   /* ---- B. results ---- */
+  const gap=10, c4=(CW-3*gap)/4;
+  if(!/Terminated/i.test(String(r.status||''))){
   sec('B','Summary of Results');
   ensure(190);
-  const gap=10, c3=(CW-2*gap)/3, pct=r.score/r.total*100;
+  const c3=(CW-2*gap)/3, pct=r.score/r.total*100;
   [
     {l:'MIDTERM SCORE',v:r.score+' / '+r.total,s:'Points earned out of total points',bg:'#fafbfb',lc:'#5d656d',vc:'#922222'},
     {l:'MIDTERM RATING',v:String(r.grade),s:(parseFloat(r.grade)>=75?'Passed':'Failed')+' · Passing: 75',bg:(parseFloat(r.grade)>=75?'#1e7e34':'#c62828'),lc:'#ffffff',vc:'#ffffff'},
     {l:'PERCENT CORRECT',v:pct.toFixed(1)+'%',s:'Raw score as a percentage',bg:'#fafbfb',lc:'#5d656d',vc:'#922222'}
   ].forEach((c,i)=>{ const x=M+i*(c3+gap); rect(x,y,c3,74,c.bg,'#cfd4d9'); tx(c.l,x+c3/2,y+18,'b',8,c.lc,'c'); tx(c.v,x+c3/2,y+47,'b',24,c.vc,'c'); tx(c.s,x+c3/2,y+64,'r',7.5,c.lc,'c'); });
   y+=74+gap;
-  const c4=(CW-3*gap)/4;
   [['Total Items',r.correct+r.incorrect+r.unanswered,'#30353A'],['Correct',r.correct,'#17642a'],['Incorrect',r.incorrect,'#c62828'],['Unanswered',r.unanswered,'#5d656d']].forEach((c,i)=>{
     const x=M+i*(c4+gap); rect(x,y,c4,46,'#ffffff','#cfd4d9'); rect(x,y,4,46,c[2]); tx(String(c[1]),x+c4/2,y+22,'b',16,c[2],'c'); tx(c[0].toUpperCase(),x+c4/2,y+37,'b',7,'#5d656d','c'); });
   y+=46+gap;
@@ -842,6 +848,7 @@ function buildResultPDF(r){
   tx('Rating = (Score ÷ '+div+' × '+C.grading.span+') + '+C.grading.base,M+12,y+31,'r',9,'#22272b');
   tx('Rating = ('+r.score+' ÷ '+div+' × '+C.grading.span+') + '+C.grading.base+'  =  '+r.grade,M+12,y+46,'b',9.5,parseFloat(r.grade)>=75?'#1e7e34':'#c62828');
   y+=58+18;
+  }
 
   /* ---- C. integrity ---- */
   const inc=r.incidents||[], cnt=k=>inc.filter(x=>x.kind===k).length, terminated=/Terminated/.test(r.status);
@@ -867,6 +874,7 @@ function buildResultPDF(r){
   y+=14;
 
   /* ---- D. item review ---- */
+  if(!/Terminated/i.test(String(r.status||''))){
   sec('D','Item-by-Item Review');
   const colr={c:'#28A745',w:'#c62828',u:'#8a939b'}, lab={c:'Correct',w:'Incorrect',u:'Unanswered'};
   const term=/Terminated/.test(r.status);
@@ -891,10 +899,15 @@ function buildResultPDF(r){
     rect(M,y,CW,h,'#f6f7f8','#cfd4d9'); rect(M,y,5,h,'#8a939b'); L.forEach((l,k)=>tx(l,M+16,y+16+k*13,'r',9,'#22272b')); y+=h+8;
   }
   y+=8;
+   } else {
+     sec('D','Examination Status');
+     wrapT('Examination terminated due to a policy violation. Only examination status and integrity incident details are provided. No score, question review, answers or explanations are released.', 'r', 9, CW-25).forEach(l=>{ensure(14);tx(l,M+8,y+10,'r',9,'#c62828');y+=14;});
+     y+=12;
+   }
 
   /* ---- E. remarks ---- */
   ensure(190); sec('E','Remarks and Verification');
-  const notes=['This Result Slip was generated automatically by the '+C.systemTitle+' from the examinee’s recorded session. The Midterm Rating is computed as (Midterm Score ÷ '+div+' × '+C.grading.span+') + '+C.grading.base+'.',
+  const notes=['This Result Slip was generated automatically by the '+C.systemTitle+' from the examinee’s recorded session.'+(/Terminated/i.test(String(r.status||''))?' No grade or item review is released for a terminated examination.':' The Midterm Rating is computed as (Midterm Score ÷ '+(r.divisor||r.total)+' × '+C.grading.span+') + '+C.grading.base+'.'),
     'This Result Slip serves as the examinee’s acknowledgement of the answers submitted and the results shown.'];
   notes.forEach(t=>{ wrapT(t,'r',8.5,CW).forEach(l=>{ tx(l,M,y+9,'r',8.5,'#30353A'); y+=12; }); y+=4; });
   y+=34; const sw=(CW-40)/2;
