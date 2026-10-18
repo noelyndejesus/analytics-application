@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>BAT 405 – Midterm Examination</title>
+<style>
+:root{
+  --maroon:#922222; --maroon-d:#771a1a; --charcoal:#30353A; --blue:#0088C7; 
+  --green:#28A745; --green-d:#1e8636; --red:#c62828; --amber:#b26a00;
+  --bg:#f2f3f5; --card:#fff; --line:#d9dde1; --muted:#5d656d; --text:#22272b;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,Helvetica,sans-serif;font-size:16px;line-height:1.5}
+button,input,select{font-family:inherit;font-size:1rem}
+:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+.topbar{background:var(--charcoal);color:#fff;border-bottom:4px solid var(--maroon)}
+.topbar .in{max-width:900px;margin:0 auto;padding:12px 16px;display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;justify-content:space-between}
+.topbar h1{margin:0;font-size:1.05rem;letter-spacing:.06em}
+.topbar .sub{font-size:.85rem;opacity:.85}
+.wrap{max-width:900px;margin:0 auto;padding:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:20px;margin-bottom:16px}
+.card h2{margin:0 0 4px;font-size:1.25rem;color:var(--maroon)}
+.card h3{margin:16px 0 6px;font-size:1rem;color:var(--charcoal)}
+.muted{color:var(--muted);font-size:.9rem}
+table.meta{width:100%;border-collapse:collapse;font-size:.92rem;margin:10px 0}
+table.meta th,table.meta td{padding:7px 10px;border:1px solid var(--line);text-align:left;vertical-align:top}
+table.meta th{background:#f6f7f8;width:34%;color:var(--charcoal)}
+label.f{display:block;font-weight:bold;margin:12px 0 4px;font-size:.92rem}
+input[type=text],input[type=email],select{width:100%;min-height:46px;padding:9px 12px;border:1px solid #aeb5bb;border-radius:8px;background:#fff;color:var(--text)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:46px;padding:10px 20px;border:0;border-radius:8px;background:var(--maroon);color:#fff;font-weight:bold;cursor:pointer;text-decoration:none}
+.btn:hover{background:var(--maroon-d)}
+.btn.blue{background:var(--blue)} .btn.blue:hover{background:#006fa3}
+.btn.green{background:var(--green)} .btn.green:hover{background:var(--green-d)}
+.btn.gray{background:#e4e7ea;color:var(--charcoal)} .btn.gray:hover{background:#d4d8dc}
+.btn.ghost{background:#fff;color:var(--maroon);border:2px solid var(--maroon)}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.btn.sm{min-height:44px;padding:8px 14px;font-size:.9rem}
+.row{display:flex;flex-wrap:wrap;gap:10px}
+.notice{border-left:5px solid var(--amber);background:#fff7e8;padding:10px 14px;border-radius:6px;margin:12px 0;font-size:.9rem}
+.notice.red{border-color:var(--red);background:#fdecec}
+.notice.blue{border-color:var(--blue);background:#eaf6fc}
+.notice.green{border-color:var(--green);background:#eaf7ee}
+ol.rules{margin:6px 0 6px 20px;padding:0} ol.rules li{margin:4px 0;font-size:.93rem} a{color:var(--blue)}
+ul.rules{margin:6px 0 6px 18px;padding:0} ul.rules li{margin:4px 0;font-size:.93rem}
+.check{display:flex;gap:10px;align-items:flex-start;margin:10px 0;min-height:44px;font-size:.93rem}
+.check input{width:24px;height:24px;margin-top:1px;flex:none}
+details{margin:12px 0;border:1px solid var(--line);border-radius:8px;padding:8px 12px;background:#fafbfb}
+details summary{cursor:pointer;font-weight:bold;min-height:32px;display:flex;align-items:center;color:var(--charcoal)}
+.err{color:var(--red);font-size:.85rem;margin-top:3px;min-height:1em}
+
+/* exam */
+.examhead{position:sticky;top:0;z-index:5;background:#fff;border-bottom:1px solid var(--line)}
+.examhead .in{max-width:900px;margin:0 auto;padding:8px 16px;display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;justify-content:space-between}
+.timer{font-weight:bold;font-variant-numeric:tabular-nums;background:var(--charcoal);color:#fff;padding:4px 12px;border-radius:20px}
+.timer.low{background:var(--red)}
+.bar{height:8px;background:#e4e7ea}
+.bar>div{height:100%;background:var(--green);transition:width .2s}
+.qhead{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;margin-bottom:10px}
+.chip{display:inline-block;padding:3px 10px;border-radius:20px;font-size:.8rem;font-weight:bold;background:#e4e7ea;color:var(--charcoal)}
+.chip.ok{background:#d9f0df;color:#17642a} .chip.part{background:#fde9c9;color:#8a5200} .chip.no{background:#fde0e0;color:#8f1d1d}
+.prompt{font-size:1.12rem;font-weight:bold;margin:8px 0 14px}
+.choice{display:flex;align-items:center;gap:12px;min-height:56px;padding:12px 14px;margin:8px 0;border:2px solid var(--line);border-radius:10px;cursor:pointer;background:#fff}
+.choice:hover{border-color:#9aa3aa}
+.choice input{width:22px;height:22px;flex:none;accent-color:var(--maroon)}
+.choice .ltr{flex:none;width:30px;height:30px;border-radius:50%;background:#e9ecef;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:.85rem}
+.choice:has(input:checked){border-color:var(--maroon);background:#fbeeee}
+.choice:has(input:checked) .ltr{background:var(--maroon);color:#fff}
+.choice:has(input:focus-visible){outline:3px solid var(--blue);outline-offset:2px}
+.pair{display:grid;grid-template-columns:1fr;gap:6px;padding:12px;border:1px solid var(--line);border-radius:10px;margin:10px 0;background:#fafbfb}
+.pair b{font-size:1.02rem}
+.nav{display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;margin-top:16px}
+.qnav{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.qn{min-width:44px;min-height:44px;border-radius:8px;border:2px solid var(--line);background:#fff;font-weight:bold;cursor:pointer;position:relative;color:var(--charcoal)}
+.qn.ans{background:var(--blue);border-color:var(--blue);color:#fff}
+.qn.part{background:#fde9c9;border-color:#e0a850}
+.qn.cur{box-shadow:0 0 0 3px var(--maroon)}
+.qn.mk::after{content:"\2691";position:absolute;top:-8px;right:-4px;font-size:.9rem;color:var(--amber);background:#fff;border-radius:50%;line-height:1}
+.legend{font-size:.8rem;color:var(--muted);margin-top:8px}
+
+/* modal / toast */
+.modal-bg{position:fixed;inset:0;background:rgba(20,22,25,.6);display:flex;align-items:center;justify-content:center;padding:16px;z-index:50}
+.modal{background:#fff;border-radius:12px;max-width:520px;width:100%;max-height:90vh;overflow:auto;padding:20px}
+.modal h2{margin:0 0 8px;color:var(--maroon);font-size:1.2rem}
+.toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--charcoal);color:#fff;padding:10px 16px;border-radius:8px;z-index:60;max-width:92vw;font-size:.9rem}
+
+/* results */
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin:12px 0}
+.tile{border:1px solid var(--line);border-radius:10px;padding:12px;text-align:center;background:#fafbfb}
+.tile .v{font-size:1.7rem;font-weight:bold;color:var(--maroon)} .tile .l{font-size:.8rem;color:var(--muted)}
+.item{border:1px solid var(--line);border-left:6px solid var(--line);border-radius:8px;padding:12px 14px;margin:10px 0;background:#fff}
+.item.c{border-left-color:var(--green)} .item.w{border-left-color:var(--red)} .item.u{border-left-color:#8a939b}
+.item .top{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.item p{margin:4px 0;font-size:.92rem}
+.exp{color:var(--muted);font-style:italic}
+.ok-t{color:#17642a;font-weight:bold} .bad-t{color:var(--red);font-weight:bold}
+
+.item,.tile{break-inside:avoid}
+body{min-height:100vh;min-height:100dvh;overflow-x:hidden;padding-left:env(safe-area-inset-left);padding-right:env(safe-area-inset-right);padding-bottom:env(safe-area-inset-bottom)}
+.topbar .in{padding-top:max(12px,env(safe-area-inset-top))}
+.examhead .in{padding-top:max(8px,env(safe-area-inset-top))}
+.card,.prompt,.choice span,.pair b,.notice,.modal{overflow-wrap:anywhere}
+.qnav{display:grid;grid-template-columns:repeat(auto-fill,minmax(46px,1fr));gap:8px}
+.qn{width:100%}
+.modal{max-height:90vh;max-height:90dvh}
+.sendbox{margin:12px 0}
+.big{font-size:1.05rem}
+@media (max-width:600px){
+  body{font-size:15.5px}
+  .wrap{padding:10px}
+  .card{padding:16px 14px}
+  .card h2{font-size:1.12rem}
+  .topbar .in{padding-left:14px;padding-right:14px;padding-bottom:10px}
+  .topbar h1{font-size:.95rem;letter-spacing:.04em}
+  .topbar .sub{font-size:.8rem}
+  .examhead .in{padding-left:14px;padding-right:14px}
+  table.meta,table.meta tbody,table.meta tr,table.meta th,table.meta td{display:block;width:100%}
+  table.meta tr{border:1px solid var(--line);border-radius:8px;margin-bottom:8px;overflow:hidden}
+  table.meta th{border:0;width:100%;padding:6px 10px 0;font-size:.74rem;text-transform:uppercase;letter-spacing:.03em}
+  table.meta td{border:0;padding:2px 10px 8px}
+  .prompt{font-size:1.02rem}
+  .choice{padding:10px 12px;gap:10px;min-height:52px}
+  .nav{flex-wrap:nowrap}
+  .nav .btn{flex:1 1 0;padding:10px 8px;min-width:0}
+  .full-m{width:100%}
+  .modal .row .btn{flex:1 1 100%}
+}
+@media (min-width:600px){.pair{grid-template-columns:1fr 1fr;align-items:center}}
+.qb{font-size:1.02rem;line-height:1.5;margin:6px 0 12px}.qb p{margin:.5em 0}.qb ul{margin:.4em 0 .4em 1.3em}
+.qt{border-collapse:collapse;margin:.6em 0;max-width:100%;display:block;overflow-x:auto}.qt th,.qt td{border:1px solid #cfd4d9;padding:6px 10px;text-align:left;font-size:.92em;vertical-align:top}.qt th{background:#f3f4f6}
+.qimg img{max-width:100%;height:auto;border:1px solid #cfd4d9;border-radius:6px;margin:6px 0}
+
+/* sequencing: drag & drop (pointer events: touch, mouse, pen) + tap-to-place */
+.seq-h{font-weight:bold;margin:14px 0 6px;color:var(--charcoal)}
+ol.slots{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.slot{display:grid;grid-template-columns:64px 1fr;gap:8px;align-items:center;min-height:60px;padding:8px;border:2px dashed #aeb5bb;border-radius:10px;background:#fafbfb}
+.slot.filled{border-style:solid;border-color:var(--blue);background:#eaf6fc}
+.slot.over,.pool.over{border-color:var(--maroon);background:#fbeeee}
+.slot-n{font-weight:bold;color:var(--maroon);font-size:.85rem}
+.slot-e{color:var(--muted);font-size:.85rem}
+.pool{display:grid;gap:8px;min-height:64px;padding:8px;border:2px dashed #aeb5bb;border-radius:10px;background:#fafbfb}
+.act{display:flex;align-items:stretch;gap:4px;background:#fff;border:2px solid var(--line);border-radius:10px;min-height:52px;cursor:pointer;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+.act.sel{border-color:var(--maroon);box-shadow:0 0 0 3px rgba(146,34,34,.25)}
+.act.dragging{opacity:.35}
+.act .grip{flex:none;width:44px;min-height:44px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;letter-spacing:-2px;color:var(--muted);cursor:grab;touch-action:none;border-right:1px solid var(--line);-webkit-user-select:none;user-select:none}
+.act .act-t{flex:1;min-width:0;padding:8px 6px;font-size:.93rem;overflow-wrap:anywhere}
+.act .act-x{flex:none;width:44px;min-height:44px;border:0;background:transparent;color:var(--red);font-size:1.1rem;cursor:pointer}
+.act.ghost{position:fixed;z-index:70;pointer-events:none;opacity:.95;box-shadow:0 8px 20px rgba(0,0,0,.3);transform:rotate(1deg)}
+.seq-st{min-height:1.4em;font-size:.88rem;color:var(--maroon);margin-top:6px}
+@media (max-width:600px){.slot{grid-template-columns:52px 1fr;gap:6px;padding:6px;min-height:56px}.slot-n{font-size:.78rem}}
+</style>
+</head>
+<body>
+
+<div class="topbar"><div class="in">
+  <div><h1 id="hdTitle"></h1><div class="sub" id="hdCourse"></div></div>
+  <div class="sub" id="hdPeriod"></div>
+</div></div>
+<div id="app"></div>
+<div id="modalRoot"></div>
+
+<script>
+/* =====================================================================
+   EDIT HERE — EXAM_CONFIG and QUESTIONS
+   ---------------------------------------------------------------------
+   • Change titles, facilitator, sections, timer and restrictions in EXAM_CONFIG.
+   • To replace questions, edit the QUESTIONS array below. Each question has:
+       id, type ('mcq' | 'tf' | 'match'), prompt, points, explanation,
+       choices [{id,text}], correctAnswer (the id of the right choice).
+     For type 'match', give shared `choices` (the answer options) and a `pairs`
+     array; each pair has id, prompt, correctAnswer (a choice id), points,
+     explanation. Every pair is scored separately.
+   • Total score = sum of all points. Rating = (Score ÷ Total × 62.5) + 37.5 (see grading in EXAM_CONFIG).
+   • SECURITY LIMITATION: this is a single offline file, so the answer key is
+     readable by anyone who views the page source. Use only for demonstration
+     or low-stakes assessment.
+   ===================================================================== */
+const EXAM_CONFIG = {
+  systemTitle: 'ONLINE EXAMINATION SYSTEM',
+  course: 'BAT 405 – Analytics Application',
+  facilitator: 'Dr. Noelyn M. De Jesus',
+  examId: 'BAT405-MIDTERM-01',                      // used for duplicate detection + storage keys
+  examTitle: 'MIDTERM EXAMINATION – Analytics Application',
+  academicPeriod: 'First Semester, A.Y. 2026–2027',
+  sections: ['BSIT BA 4101', 'BSIT BA 4102', 'BSIT BA 4103'],
+  officialExamLabel: 'October 18, 2026 — Test closes at 11:00 PM',
+  // No browser-side start-date activation. The server enforces the closing deadline.
+  dateLock: { enabled: false, start: '2026-10-18T22:50:00+08:00', end: '2026-10-18T23:00:00+08:00' },
+  // Optional countdown; auto-submits at 0:00 when enabled.
+  timer: { enabled: true, minutes: 10 },
+  shuffleChoices: true,                             // shuffle MCQ options and matching dropdown options
+  antiCheat: {
+    enabled: true,                                  // set false to turn off all monitoring
+    terminateOnLeave: true,                         // second tab/window leave auto-submits as "Terminated – Policy Violation"
+    warnOnNavigation: true,                         // best-effort back/close warning
+    offerFullscreen: false,
+    onReload: 'terminate'                           // 'terminate' = reload/close counts as leaving; 'resume' = restore draft
+  },
+  grading: { base: 37.5, span: 62.5, divisor: null }, // Rating = (Score ÷ divisor × span) + base. null = use the exam's total points; set a number (e.g. 10) to override
+  // Results are NOT emailed. After submitting, the student downloads a Result Slip PDF that is generated
+  // in their own browser, so no email service or server is needed.
+  // Paste the Google Apps Script Web App URL here (ends with /exec). Leave '' to use this browser only.
+  attemptServer: 'https://script.google.com/macros/s/AKfycbzdsIO_PbGs6Q5bPFqZTZ53Pbug5Rm3PE0yzAjxYKCGgI4oFKdlIPZnEymkDAZqaajK/exec',
+  storagePrefix: 'bat405_exam_v1'
+};
+
+let QUESTIONS = [];   // loaded from the server when the exam starts (no questions or answers are stored in this file)
+
+/* ======================= END OF EDITABLE AREA ======================= */
+
+(function(){
+'use strict';
+const C = EXAM_CONFIG;
+const $ = (s,r)=> (r||document).querySelector(s);
+const esc = s => String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmtDT = d => new Date(d).toLocaleString('en-PH',{year:'numeric',month:'short',day:'numeric',hour:'numeric',minute:'2-digit',second:'2-digit'});
+const fmtDur = s => { s=Math.max(0,Math.round(s)); const m=Math.floor(s/60); return m+' min '+String(s%60).padStart(2,'0')+' s'; };
+
+/* ---------- items & points (set from the server's data) ---------- */
+let TOTAL = 0, ITEM_COUNT = 0;
+function prepare(){ ITEM_COUNT=0; TOTAL=0; QUESTIONS.forEach(q=>{ q.firstNo=ITEM_COUNT+1; ITEM_COUNT+=q.items.length; q.items.forEach(i=>{ TOTAL+=i.points; }); }); }
+
+/* ---------- storage (localStorage with memory fallback) ---------- */
+let storageOK = true; const mem = {};
+try{ localStorage.setItem('__t','1'); localStorage.removeItem('__t'); }catch(e){ storageOK=false; }
+const sGet = k => { try{ return storageOK ? localStorage.getItem(k) : (mem[k]||null);}catch(e){return mem[k]||null;} };
+const sSet = (k,v) => { try{ if(storageOK) localStorage.setItem(k,v); else mem[k]=v; }catch(e){ mem[k]=v; } };
+const sDel = k => { try{ if(storageOK) localStorage.removeItem(k);}catch(e){} delete mem[k]; };
+const deviceKey = C.storagePrefix+':device:'+C.examId;
+const attemptKey = sr => C.storagePrefix+':attempt:'+C.examId+':'+sr.trim().toLowerCase();
+const DRAFT_KEY = C.storagePrefix+':draft:'+C.examId;
+/* ---------- state ---------- */
+const form = { sr:'', code:'', ack:false, fs:false };
+let S = null;            // active attempt
+let phase = 'intro';
+let tick = null, lastResult = null;
+
+function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
+function newRef(){ return 'B405-'+Date.now().toString(36).toUpperCase()+'-'+Math.random().toString(36).slice(2,6).toUpperCase(); }
+
+/* ---------- header ---------- */
+$('#hdTitle').textContent = C.systemTitle;
+$('#hdCourse').textContent = C.course;
+$('#hdPeriod').textContent = C.academicPeriod;
+
+/* =====================  INTRO  ===================== */
+function renderIntro(msg){
+  phase='intro';
+  $('#app').innerHTML = `<main class="wrap">
+  <section class="card">
+    <h2>${esc(C.examTitle)}</h2>
+    <div class="muted">Please read the instructions, then enter your details.</div>
+    <table class="meta" aria-label="Examination details">
+      <tr><th>Course</th><td>${esc(C.course)}</td></tr>
+      <tr><th>Facilitator</th><td>${esc(C.facilitator)}</td></tr>
+      <tr><th>Academic period</th><td>${esc(C.academicPeriod)}</td></tr>
+      <tr><th>Items / points</th><td>50 items · 60 points</td></tr>
+      <tr><th>Examination Date</th><td>${esc(C.officialExamLabel)}</td></tr>
+    </table>
+    <h3>Instructions</h3>
+    <ul class="rules">
+      <li>Use Previous / Next or the item numbers to move around.</li>
+      <li>Change answers anytime before submitting. Use “Mark for Review” to flag items.</li>
+      <li>Unanswered items earn zero.</li>
+      <li>After submission, save your Reference ID. Your score, rating and PDF become available at 11:00 PM.</li>
+    </ul>
+    <h3>Examination rules (best-effort monitoring)</h3>
+    <ul class="rules">
+      <li>Once the exam starts, <b>leaving this tab or window</b> (switching tabs/apps, minimizing, <b>locking your device</b>) triggers a <b>first warning</b>. A <b>second time</b>, your saved answers are submitted automatically and the result is marked <b>“Terminated – Policy Violation”</b>.</li>
+      <li><b>Page Refresh:</b> Refreshing or reloading the examination page will result in <b>IMMEDIATE TERMINATION AND AUTOMATIC SUBMISSION</b>, even on the first attempt.</li>
+      <li>Manually locking your phone, tablet, or computer will be treated the same as leaving the examination screen and will count as a violation.</li>
+      <li>You must use only one device throughout the examination. Switching between devices is strictly prohibited.</li>
+    </ul>
+    <div class="notice blue"><b>Your result is a downloadable PDF after 11:00 PM.</b> After submitting your exam, use the same device and browser to download your Result Slip. Do not clear your browsing data until you have successfully downloaded and saved the file. Once saved, upload your Result Slip to Google Classroom as proof of completion.${storageOK?'':' <b>Browser storage is unavailable, so duplicate-attempt checks will not persist.</b>'}</div>
+  </section>
+  <section class="card">
+    <h2>Student details</h2>
+    ${msg||''}
+    <div id="openBanner"></div>
+    <div id="idForm">
+      <label class="f" for="fSR">SR Code</label>
+      <input type="text" id="fSR" autocomplete="off" autocapitalize="characters" placeholder="e.g., 23-12345" value="${esc(form.sr)}" aria-describedby="eSR">
+      <div class="err" id="eSR"></div>
+      <div id="codeWrap">
+        <label class="f" for="fCode">Access Code <span class="muted">(given by your facilitator)</span></label>
+        <input type="text" id="fCode" autocomplete="off" autocapitalize="characters" value="${esc(form.code)}">
+      </div>
+      <label class="check"><input type="checkbox" id="fAck"${form.ack?' checked':''}>
+        <span>I have carefully read and understood all the rules and instructions for this examination and agree to comply with them.</span></label>
+      <div class="err" id="eAck"></div>
+      <div class="row" style="margin-top:14px">
+        <button type="button" class="btn green full-m" id="btnStart">Start Examination</button>
+      </div>
+      <div class="err" id="eAll" role="alert"></div>
+    </div>
+  </section>
+  <section class="card"><h2>Retrieve Result Slip</h2>
+    <p class="muted">For submitted examinations only. Available October 18, 2026 at 11:00 PM Philippine Time. This does not create another exam attempt.</p>
+    <label class="f" for="retSR">SR Code</label><input id="retSR" type="text" autocomplete="off">
+    <label class="f" for="retCode">Exam Access Code</label><input id="retCode" type="text" autocomplete="off">
+    <label class="f" for="retRef">Submission Reference ID</label><input id="retRef" type="text" autocomplete="off">
+    <div class="row" style="margin-top:14px"><button class="btn blue" type="button" id="btnRetrieve">Retrieve Result</button></div>
+    <div id="retrieveMsg" role="status" aria-live="polite"></div>
+  </section>
+  </main>`;
+  $('#btnRetrieve').onclick=retrieveResult;
+  const f=$('#idForm');
+  $('#fSR').oninput=e=>form.sr=e.target.value;
+  $('#fCode').oninput=e=>form.code=e.target.value;
+  $('#fAck').onchange=e=>form.ack=e.target.checked;
+  $('#btnStart').onclick=tryStart;
+  f.onkeydown=e=>{ if(e.key==='Enter'&&e.target.tagName==='INPUT'&&(e.target.type==='text')){ e.preventDefault(); tryStart(); } };
+  checkOpen();
+}
+async function retrieveResult(){
+  const sr=$('#retSR').value.trim().toUpperCase(),code=$('#retCode').value.trim(),ref=$('#retRef').value.trim();
+  const msg=$('#retrieveMsg'); if(!sr||!code||!ref){msg.textContent='Enter SR Code, access code, and your submission reference ID.';return;}
+  msg.textContent='Checking your submission...';
+  const res=await serverCall({action:'retrieve',sr,code,ref},25000);
+  if(!res||!res.ok){msg.textContent=(res&&res.error)||'Unable to verify result. Please try again.';return;}
+  if(res.locked){msg.textContent='Results are locked until October 18, 2026, 11:00 PM Philippine Time.';return;}
+  showSubmitted(Object.assign({},res.result,{retrieval:{sr,code,ref}}));
+}
+function setErr(id,t){ $('#'+id).textContent=t||''; }
+/* ---------- server (Google Apps Script): class list, one attempt, timer, grading ---------- */
+const PENDING_KEY = C.storagePrefix+':pending:'+C.examId;
+const sleep = ms => new Promise(z=>setTimeout(z,ms));
+async function serverCall(o,timeout){
+  if(!C.attemptServer) return null;
+  const ctl=new AbortController(), t=setTimeout(()=>ctl.abort(),timeout||20000);
+  try{ const res=await fetch(C.attemptServer,{method:'POST',body:JSON.stringify(o),signal:ctl.signal}); return await res.json(); }
+  catch(e){ return null; } finally{ clearTimeout(t); }
+}
+function reasonMsg(res,sr){
+  switch(res.reason){
+    case 'notlisted': return 'Your SR Code is not on the class list. Check the code or contact your facilitator.';
+    case 'badcode': return 'Incorrect access code. Please check the code given by your facilitator.';
+    case 'notyet': return 'This examination is not yet open. It begins on '+res.startsAtText+' (Philippine Time).';
+    case 'closed': return 'The time to start this examination has passed. Please contact your facilitator.';
+    case 'taken': return 'An attempt for SR Code “'+sr+'” was already recorded ('+(res.status||'Started')+'). A second attempt is not allowed. Please contact your facilitator.';
+  }
+  return 'You cannot start the examination right now.';
+}
+async function checkOpen(){
+  const res=await serverCall({action:'status'},12000);
+  if(phase!=='intro'||!res||!res.ok) return;
+  if(!res.codeRequired){ const w=$('#codeWrap'); if(w) w.style.display='none'; }
+  if(res.open===false){
+    const b=$('#openBanner'); if(b) b.innerHTML='<div class="notice red"><b>'+esc(reasonMsg(res,''))+'</b></div>';
+    const st=$('#btnStart'); if(st) st.disabled=true;
+  }
+}
+async function tryStart(){
+  const sr=form.sr.trim().toUpperCase();
+  let ok=true;
+  setErr('eSR',sr?'':'SR Code is required.'); if(!sr) ok=false;
+  setErr('eAck',form.ack?'':'You must acknowledge the rules to start.'); if(!form.ack) ok=false;
+  setErr('eAll',ok?'':'Please complete the fields marked above before starting.');
+  if(!ok){ const first=document.querySelector('.err:not(:empty)'); if(first&&first.previousElementSibling&&first.previousElementSibling.focus) first.previousElementSibling.focus(); return; }
+  if(!/^TEST-/.test(sr)){
+    const prior = sGet(attemptKey(sr)) || sGet(deviceKey);
+    if(prior){
+      renderIntro(`<div class="notice red"><b>An exam was already submitted on this device.</b> A second attempt is not allowed.
+        <div class="row" style="margin-top:8px"><button type="button" class="btn blue sm" id="btnView">View submission status</button></div></div>`);
+      $('#btnView').onclick=()=>{ try{ showSubmitted(JSON.parse(prior)); }catch(e){ alert('Saved submission could not be read.'); } };
+      return;
+    }
+  }
+  const btn=$('#btnStart'); btn.disabled=true; setErr('eAll','Checking your details…');
+  const res=await serverCall({action:'lookup',sr,code:form.code.trim()});
+  if(phase!=='intro') return;
+  btn.disabled=false; setErr('eAll','');
+  if(!res||!res.ok){ setErr('eAll','Could not verify your details. Check your internet connection and try again.'); return; }
+  if(!res.allowed){ renderIntro('<div class="notice red"><b>'+esc(reasonMsg(res,sr))+'</b></div>'); return; }
+  const closeM=openModal(`<h2 id="mt">⚠ Before you start</h2>
+    <p>You are starting as:</p>
+    <div class="notice green"><b>${esc(res.name)}</b><br>${esc(sr)} · ${esc(res.section)}</div>
+    <p class="muted">Not you? Press Cancel and check your SR Code.</p>
+    <div class="notice red">Once the exam starts, <b>switching windows or leaving this page is recorded</b> and will <b>end your exam</b>.<br><br><b>Do not lock your device manually.</b> Locking the screen is also treated as leaving the exam (warning first, then termination).</div>
+    <div class="row"><button type="button" class="btn green" id="mGo">I understand, start</button> <button type="button" class="btn blue" id="mNo">Cancel</button></div>`);
+  $('#mNo').onclick=()=>closeM();
+  $('#mGo').onclick=async()=>{
+    closeM();
+    renderIntro('<div class="notice blue">Starting your examination… please wait.</div>');
+    const cid=Math.random().toString(36).slice(2)+Date.now().toString(36);
+    let r2=null;
+    for(let i=0;i<3&&!(r2&&r2.ok);i++){ r2=await serverCall({action:'begin',sr,code:form.code.trim(),cid},30000); if(!(r2&&r2.ok)) await sleep(1500); }
+    if(!r2||!r2.ok){ renderIntro('<div class="notice red"><b>Could not start the examination.</b> Check your internet connection, then press Start Examination again.</div>'); return; }
+    if(!r2.allowed){ renderIntro('<div class="notice red"><b>'+esc(reasonMsg(r2,sr))+'</b></div>'); return; }
+    startExam(r2);
+  };
+}
+
+/* =====================  EXAM  ===================== */
+function startExam(res){
+  QUESTIONS=res.screens; prepare();
+  const order={}; QUESTIONS.forEach(q=>{ order[q.id]=q.choices.map(c=>c.id); });
+  const off=res.serverNow-Date.now();           // use the server's clock for the deadline
+  S={ student:{name:res.name,sr:res.sr,section:res.section}, token:res.token, ref:res.ref, screens:res.screens, order, answers:{}, marked:{}, idx:0,
+      startedAt:Date.now(), endsAt:res.endsAt-off, timerOn:true, violation:null, warnings:0, firstLeave:null, incidents:[] };
+  saveDraft();
+  beginExamPhase();
+  startAutosave();
+  if(form.fs && C.antiCheat.offerFullscreen){ try{ const el=document.documentElement; (el.requestFullscreen||el.webkitRequestFullscreen||function(){}).call(el); }catch(e){} }
+}
+let saveInterval=null;
+function startAutosave(){clearInterval(saveInterval);saveInterval=setInterval(()=>{if(phase==='exam'&&S)serverCall({action:'save',sr:S.student.sr,token:S.token,answers:S.answers},12000);},12000);}
+function saveDraft(){ if(S) sSet(DRAFT_KEY,JSON.stringify(S)); }
+function beginExamPhase(){
+  phase='exam';
+  if(C.antiCheat.enabled && C.antiCheat.warnOnNavigation){ try{ history.pushState({exam:1},'',location.href);}catch(e){} }
+  renderExam();
+  clearInterval(tick);
+  if(S.timerOn){ tick=setInterval(onTick,500); onTick(); }
+}
+function onTick(){
+  if(phase!=='exam'||!S.endsAt) return;
+  const left=Math.ceil((S.endsAt-Date.now())/1000);
+  const t=$('#timer'); if(t){ t.textContent=Math.floor(Math.max(0,left)/60)+':'+String(Math.max(0,left)%60).padStart(2,'0'); t.classList.toggle('low',left<=300); }
+  if(left>0 && left<=600 && !$('.modal')){
+    const m = left<=300 ? 5 : 10, key = m===5 ? 'w5' : 'w10';
+    if(!S[key]){
+      S.w10=true; if(m===5) S.w5=true; saveDraft();
+      const close=openModal(`<h2 id="mt">⏰ ${m} minutes left</h2>
+        <div class="notice red">You have <b>${m} minutes</b> remaining. Your exam will be submitted automatically when time runs out.</div>
+        <div class="row"><button type="button" class="btn" id="mTimeOk">OK, continue</button></div>`);
+      $('#mTimeOk').onclick=()=>close();
+    }
+  }
+  if(left<=0){ finalize('Auto-submitted – Time Expired'); }
+}
+function qStatus(q){
+  const n=q.items.filter(i=>S.answers[i.id]).length;
+  return n===0?'no':(n===q.items.length?'ok':'part');
+}
+let reviewing=false;
+let seqSel=null, seqDrag=null;   // sequencing: selected activity (tap mode) and active drag
+function ansText(q,it){ const v=S.answers[it.id]; if(!v) return null; const c=q.choices.find(x=>x.id===v); return c?c.text:v; }
+function shortTxt(t,n){ n=n||170; t=String(t||''); return t.length>n?t.slice(0,n-1).trim()+'…':t; }
+function renderReview(){
+  const rows=QUESTIONS.map((q,qi)=>q.items.map((it,k)=>{
+    const a=ansText(q,it), no=q.firstNo+k;
+    return `<div class="rvrow"><div class="rvq"><b>${no}.</b> ${esc(shortTxt(it.prompt))}</div>
+      <div class="rvans ${a?'':'none'}">${a?'Your answer: <b>'+esc(a)+'</b>':'No answer'}</div>
+      <button type="button" class="btn gray sm" data-go="${qi}">Edit</button></div>`; }).join('')).join('');
+  $('#app').innerHTML=`
+  <div class="examhead"><div class="in">
+    <div><b>${esc(S.student.name)}</b> <span class="muted">· ${esc(S.student.sr)} · ${esc(S.student.section)}</span></div>
+    <div class="row" style="align-items:center"><span class="muted" id="progTxt"></span>${S.timerOn?'<span class="timer" id="timer" role="timer" aria-label="Time remaining">--:--</span>':''}</div>
+  </div><div class="bar" aria-hidden="true"><div id="progBar"></div></div></div>
+  <main class="wrap"><section class="card">
+    <h2 style="margin-top:0">Review &amp; Submit</h2>
+    <style>.rvrow{padding:10px 0;border-bottom:1px solid #e3e6e9;display:flex;flex-direction:column;gap:6px;align-items:flex-start}.rvans.none{color:#c62828}.rvans{color:#22272b}</style>
+    ${rows}
+    <div class="nav" style="margin-top:14px">
+      <button type="button" class="btn blue" id="btnBack">← Back to exam</button>
+      <button type="button" class="btn green" id="btnFinal">Submit</button>
+    </div></section></main>`;
+  const answered=QUESTIONS.reduce((a,x)=>a+x.items.filter(i=>S.answers[i.id]).length,0);
+  $('#progTxt').textContent=answered+' of '+ITEM_COUNT+' items answered';
+  $('#progBar').style.width=(answered/ITEM_COUNT*100)+'%';
+  document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>go(+b.dataset.go));
+  $('#btnBack').onclick=()=>go(S.idx);
+  $('#btnFinal').onclick=confirmSubmit;
+  if(S.timerOn) onTick();
+  window.scrollTo(0,0);
+}
+function renderExam(){
+  if(reviewing) return renderReview();
+  const q=QUESTIONS[S.idx], last=S.idx===QUESTIONS.length-1;
+  const typeLbl=q.label||{mcq:'Multiple Choice',tf:'True / False',match:'Matching'}[q.type];
+  const numLbl = q.items.length>1 ? `Items ${q.firstNo}–${q.firstNo+q.items.length-1}` : `Item ${q.firstNo}`;
+  let body='';
+  if(q.dnd){
+    body = `<div class="qb" id="qp">${q.body}</div><div class="seq" id="seq">${seqHtml(q)}</div>`;
+  } else if(q.type==='match'){
+    const opts=S.order[q.id].map(id=>q.choices.find(c=>c.id===id));
+    body = `<div class="qb" id="qp">${q.body}</div>` + q.items.map(it=>{
+      const sel=S.answers[it.id]||'';
+      return `<div class="pair"><b id="l_${it.id}">${esc(it.prompt)}</b>
+        <select data-pair="${it.id}" aria-labelledby="l_${it.id}"><option value="">— Select answer —</option>${opts.map(o=>`<option value="${esc(o.id)}"${sel===o.id?' selected':''}>${esc(o.text)}</option>`).join('')}</select></div>`;
+    }).join('');
+  } else {
+    body = `<div class="qb" id="qp">${q.body}</div><div role="radiogroup" aria-labelledby="qp">` +
+      S.order[q.id].map((id,i)=>{ const c=q.choices.find(x=>x.id===id);
+        return `<label class="choice"><input type="radio" name="r_${q.id}" value="${esc(c.id)}"${S.answers[q.items[0].id]===c.id?' checked':''}>
+        <span class="ltr" aria-hidden="true">${q.type==='tf'?(c.id==='True'?'T':'F'):String.fromCharCode(65+i)}</span><span>${esc(c.text)}</span></label>`; }).join('') + '</div>';
+  }
+  $('#app').innerHTML = `
+  <div class="examhead"><div class="in">
+    <div><b>${esc(S.student.name)}</b> <span class="muted">· ${esc(S.student.sr)} · ${esc(S.student.section)}</span></div>
+    <div class="row" style="align-items:center">
+      <span class="muted" id="progTxt"></span>
+      ${S.timerOn?'<span class="timer" id="timer" role="timer" aria-label="Time remaining">--:--</span>':''}
+    </div></div><div class="bar" aria-hidden="true"><div id="progBar"></div></div></div>
+  <main class="wrap">
+    <section class="card" aria-labelledby="qtitle">
+      <div class="qhead">
+        <div><b id="qtitle">Question ${S.idx+1} of ${QUESTIONS.length}</b> <span class="muted">· ${numLbl} · ${typeLbl} · ${q.items.reduce((a,i)=>a+i.points,0)} pt${q.items.reduce((a,i)=>a+i.points,0)>1?'s':''}</span></div>
+        <span class="chip" id="qchip"></span>
+      </div>
+      ${body}
+      <div style="margin-top:12px"><button type="button" class="btn gray sm" id="btnMark" aria-pressed="${!!S.marked[q.id]}"></button></div>
+      <div class="nav">
+        <button type="button" class="btn blue" id="btnPrev"${S.idx===0?' disabled':''}>← Previous</button>
+        ${last?'<button type="button" class="btn green" id="btnReview">Review &amp; Submit</button>':'<button type="button" class="btn blue" id="btnNext">Next →</button>'}
+      </div>
+    </section>
+    <section class="card">
+      <b>Questions</b>
+      <div class="qnav" id="qnav"></div>
+      <div class="legend">Blue = answered · Amber = partly answered · ⚑ = marked for review · Outlined = current</div>
+    </section>
+  </main>`;
+  updateChrome();
+  $('#btnPrev').onclick=()=>go(S.idx-1);
+  const nx=$('#btnNext'); if(nx) nx.onclick=()=>go(S.idx+1);
+  const rv=$('#btnReview'); if(rv) rv.onclick=()=>{ reviewing=true; renderExam(); };
+  $('#btnMark').onclick=()=>{ S.marked[q.id]=!S.marked[q.id]; saveDraft(); updateChrome(); };
+  document.querySelectorAll('input[type=radio]').forEach(r=>r.onchange=()=>{ S.answers[q.items[0].id]=r.value; saveDraft(); updateChrome(); });
+  document.querySelectorAll('select[data-pair]').forEach(s=>s.onchange=()=>{ if(s.value) S.answers[s.dataset.pair]=s.value; else delete S.answers[s.dataset.pair]; saveDraft(); updateChrome(); });
+  if(q.dnd) initSeq(q);
+  if(S.timerOn) onTick();
+  window.scrollTo(0,0);
+}
+function updateChrome(){
+  const q=QUESTIONS[S.idx];
+  const answered=QUESTIONS.reduce((a,x)=>a+x.items.filter(i=>S.answers[i.id]).length,0);
+  $('#progTxt').textContent=answered+' of '+ITEM_COUNT+' items answered';
+  $('#progBar').style.width=(answered/ITEM_COUNT*100)+'%';
+  const st=qStatus(q), chip=$('#qchip');
+  chip.className='chip '+st; chip.textContent={ok:'Answered',part:'Partly answered',no:'Unanswered'}[st];
+  const mk=$('#btnMark'); mk.textContent=S.marked[q.id]?'⚑ Marked for review (tap to unmark)':'⚐ Mark for Review'; mk.setAttribute('aria-pressed',!!S.marked[q.id]);
+  $('#qnav').innerHTML=QUESTIONS.map((x,i)=>{ const s=qStatus(x);
+    return `<button type="button" class="qn${s==='ok'?' ans':''}${s==='part'?' part':''}${i===S.idx?' cur':''}${S.marked[x.id]?' mk':''}" data-i="${i}" aria-label="Question ${i+1}, ${ {ok:'answered',part:'partly answered',no:'unanswered'}[s] }${S.marked[x.id]?', marked for review':''}"${i===S.idx?' aria-current="step"':''}>${i+1}</button>`; }).join('');
+  document.querySelectorAll('.qn').forEach(b=>b.onclick=()=>go(+b.dataset.i));
+}
+function go(i){ if(i<0||i>=QUESTIONS.length) return; reviewing=false; seqSel=null; S.idx=i; saveDraft(); renderExam(); }
+
+
+/* ---------- sequencing (drag & drop + tap), touch / mouse / pen / keyboard ---------- */
+function seqHtml(q){
+  const opts=S.order[q.id].map(id=>q.choices.find(c=>c.id===id)), byId={}; opts.forEach(o=>byId[o.id]=o);
+  const placed={}; q.items.forEach(it=>{ const v=S.answers[it.id]; if(v) placed[v]=it.id; });
+  const card=(o,inSlot)=>`<div class="act${seqSel===o.id?' sel':''}" data-c="${esc(o.id)}" role="button" tabindex="0" aria-pressed="${seqSel===o.id}">`+
+    `<span class="grip" data-grip="1" title="Drag to move" aria-hidden="true">&#8942;&#8942;</span><span class="act-t">${esc(o.text)}</span>`+
+    (inSlot?`<button type="button" class="act-x" data-x="${esc(o.id)}" aria-label="Remove this activity from its step">&#10005;</button>`:'')+`</div>`;
+  const slots=q.items.map((it,k)=>{ const v=S.answers[it.id], o=v&&byId[v];
+    return `<li class="slot${o?' filled':''}" data-slot="${esc(it.id)}" tabindex="0" aria-label="Step ${k+1}${o?'':', empty'}"><span class="slot-n">Step ${k+1}</span><div>${o?card(o,true):'<span class="slot-e">Drop here</span>'}</div></li>`; }).join('');
+  const left=opts.filter(o=>!placed[o.id]);
+  return `<div class="seq-h">Your sequence</div><ol class="slots">${slots}</ol>`+
+    `<div class="seq-h">Activities to arrange <span class="muted">(${left.length} left)</span></div>`+
+    `<div class="pool">${left.map(o=>card(o,false)).join('')||'<span class="slot-e">All activities are placed. Drag one back here to take it out of its step.</span>'}</div>`+
+    `<div class="seq-st" role="status" aria-live="polite">${seqSel?'Activity selected. Now tap the step where it belongs.':''}</div>`+
+    `<div class="row" style="margin-top:8px"><button type="button" class="btn gray sm" data-clear="1">Clear all steps</button></div>`;
+}
+function seqPlace(q,cid,slotId){
+  const from=q.items.find(it=>S.answers[it.id]===cid), prev=S.answers[slotId];
+  if(from&&from.id===slotId) return;
+  if(from){ if(prev) S.answers[from.id]=prev; else delete S.answers[from.id]; }   // moving onto an occupied step swaps the two
+  S.answers[slotId]=cid; saveDraft();
+}
+function seqUnplace(q,cid){ const it=q.items.find(x=>S.answers[x.id]===cid); if(it){ delete S.answers[it.id]; saveDraft(); } }
+function seqRefresh(q){ const el=$('#seq'); if(el){ el.innerHTML=seqHtml(q); updateChrome(); } }
+function initSeq(q){
+  const el=$('#seq'); if(!el) return;
+  const hit=(x,y)=>{ const t=document.elementFromPoint(x,y); if(!t) return null; const s=t.closest('.slot'); if(s&&el.contains(s)) return {slot:s.dataset.slot}; const p=t.closest('.pool'); return p&&el.contains(p)?{pool:true}:null; };
+  const mark=h=>{ el.querySelectorAll('.over').forEach(n=>n.classList.remove('over')); if(!h) return; const n=h.slot?el.querySelector('.slot[data-slot="'+h.slot+'"]'):el.querySelector('.pool'); if(n) n.classList.add('over'); };
+  el.addEventListener('pointerdown',e=>{
+    const g=e.target.closest('[data-grip]'); if(!g||seqDrag) return;
+    if(e.pointerType==='mouse'&&e.button!==0) return;
+    e.preventDefault();
+    const act=g.closest('.act'), r=act.getBoundingClientRect(), ghost=act.cloneNode(true);
+    ghost.classList.add('ghost'); ghost.classList.remove('sel'); ghost.removeAttribute('tabindex');
+    ghost.style.cssText='width:'+r.width+'px;left:'+r.left+'px;top:'+r.top+'px';
+    document.body.appendChild(ghost); document.body.style.userSelect='none'; document.body.style.webkitUserSelect='none';
+    seqDrag={cid:act.dataset.c,ghost,dx:e.clientX-r.left,dy:e.clientY-r.top,sx:e.clientX,sy:e.clientY,moved:false,id:e.pointerId,y:e.clientY,raf:0};
+    act.classList.add('dragging');
+    try{ g.setPointerCapture(e.pointerId); }catch(_){}
+    const auto=()=>{ if(!seqDrag) return; const y=seqDrag.y,H=window.innerHeight; if(y<90) window.scrollBy(0,-Math.ceil((90-y)/5)); else if(y>H-90) window.scrollBy(0,Math.ceil((y-(H-90))/5)); seqDrag.raf=requestAnimationFrame(auto); };
+    seqDrag.raf=requestAnimationFrame(auto);
+  });
+  el.addEventListener('pointermove',e=>{
+    const d=seqDrag; if(!d||e.pointerId!==d.id) return; e.preventDefault();
+    if(!d.moved&&Math.hypot(e.clientX-d.sx,e.clientY-d.sy)>8) d.moved=true;
+    d.y=e.clientY; d.ghost.style.left=(e.clientX-d.dx)+'px'; d.ghost.style.top=(e.clientY-d.dy)+'px';
+    if(d.moved) mark(hit(e.clientX,e.clientY));
+  });
+  const end=(e,cancel)=>{
+    const d=seqDrag; if(!d||e.pointerId!==d.id) return;
+    seqDrag=null; cancelAnimationFrame(d.raf); d.ghost.remove(); mark(null); document.body.style.userSelect=''; document.body.style.webkitUserSelect='';
+    const a=el.querySelector('.act.dragging'); if(a) a.classList.remove('dragging');
+    if(cancel) return;
+    if(d.moved){ const h=hit(e.clientX,e.clientY); if(h){ if(h.slot) seqPlace(q,d.cid,h.slot); else seqUnplace(q,d.cid); seqSel=null; seqRefresh(q); } }
+    else { seqSel=(seqSel===d.cid)?null:d.cid; seqRefresh(q); }   // a tap on the handle selects the activity
+  };
+  el.addEventListener('pointerup',e=>end(e,false));
+  el.addEventListener('pointercancel',e=>end(e,true));
+  el.addEventListener('touchmove',e=>{ if(seqDrag) e.preventDefault(); },{passive:false});   // older iOS: keep the page still while dragging
+  el.addEventListener('contextmenu',e=>{ if(e.target.closest('.act')) e.preventDefault(); });
+  el.addEventListener('click',e=>{
+    if(e.target.closest('[data-grip]')) return;   // handled by the pointer events above
+    const x=e.target.closest('[data-x]'); if(x){ seqUnplace(q,x.dataset.x); seqSel=null; seqRefresh(q); return; }
+    if(e.target.closest('[data-clear]')){ q.items.forEach(it=>delete S.answers[it.id]); saveDraft(); seqSel=null; seqRefresh(q); return; }
+    const act=e.target.closest('.act'), slot=e.target.closest('.slot'), pool=e.target.closest('.pool');
+    if(act){
+      const cid=act.dataset.c;
+      if(seqSel&&seqSel!==cid&&slot){ seqPlace(q,seqSel,slot.dataset.slot); seqSel=null; }
+      else seqSel=(seqSel===cid)?null:cid;
+      seqRefresh(q); return;
+    }
+    if(slot&&seqSel){ seqPlace(q,seqSel,slot.dataset.slot); seqSel=null; seqRefresh(q); return; }
+    if(pool&&seqSel){ seqUnplace(q,seqSel); seqSel=null; seqRefresh(q); }
+  });
+  el.addEventListener('keydown',e=>{
+    if(e.key!=='Enter'&&e.key!==' ') return;
+    const t=e.target; if(t.tagName==='BUTTON') return;
+    if(t.classList.contains('act')||t.classList.contains('slot')){ e.preventDefault(); t.click(); }
+  });
+}
+
+/* ---------- modal ---------- */
+function openModal(html,onClose){
+  const root=$('#modalRoot'); const prev=document.activeElement;
+  root.innerHTML=`<div class="modal-bg"><div class="modal" role="dialog" aria-modal="true" aria-labelledby="mt">${html}</div></div>`;
+  const first=root.querySelector('button'); if(first) first.focus();
+  const close=()=>{ root.innerHTML=''; document.removeEventListener('keydown',esc_); if(prev&&prev.focus&&document.contains(prev)) prev.focus(); };
+  const esc_=e=>{ if(e.key==='Escape') close(); };
+  document.addEventListener('keydown',esc_);
+  return close;
+}
+function confirmSubmit(){
+  const un=[], mk=[];
+  QUESTIONS.forEach(q=>q.items.forEach((it,k)=>{ if(!S.answers[it.id]) un.push(q.firstNo+k); }));
+  QUESTIONS.forEach((q,i)=>{ if(S.marked[q.id]) mk.push(i+1); });
+  const close=openModal(`<h2 id="mt">Submit examination?</h2>
+    <p>Answered: <b>${ITEM_COUNT-un.length}</b> of ${ITEM_COUNT} items.</p>
+    <p>After submitting, download your Result Slip (PDF) to see your score and rating.</p>
+    ${un.length?`<div class="notice red"><b>${un.length} unanswered item${un.length>1?'s':''}</b> (item no. ${un.join(', ')}). Unanswered items earn zero.</div>`:'<div class="notice green">All items answered.</div>'}
+    ${mk.length?`<div class="notice">Screens still marked for review: ${mk.join(', ')}.</div>`:''}
+    <p class="muted">After submitting you cannot change your answers.</p>
+    <div class="notice"><b>By submitting, you acknowledge your answers and results.</b></div>
+    <div class="row"><button type="button" class="btn gray" id="mBack">Return to exam</button><button type="button" class="btn green" id="mGo">Submit now</button></div>`);
+  $('#mBack').onclick=close;
+  $('#mGo').onclick=()=>{ close(); finalize('Submitted'); };
+}
+let toastT;
+function toast(t){ let el=$('.toast'); if(el) el.remove(); el=document.createElement('div'); el.className='toast'; el.setAttribute('role','status'); el.textContent=t; document.body.appendChild(el); clearTimeout(toastT); toastT=setTimeout(()=>el.remove(),4500); }
+
+/* ---------- finalize: the server grades the answers ---------- */
+function renderBusy(html){ $('#app').innerHTML='<main class="wrap"><section class="card">'+html+'</section></main>'; window.scrollTo(0,0); }
+async function finalize(status){
+  if(phase!=='exam'||!S) return;
+  phase='finalizing'; clearInterval(tick); clearInterval(saveInterval);
+  const st=S;
+  const payload={action:'submit',sr:st.student.sr,token:st.token,status,answers:st.answers,warnings:st.warnings||0,
+    violation:st.violation?st.violation.type:'',incidents:st.incidents||[]};
+  sSet(PENDING_KEY,JSON.stringify({payload,token:st.token,ref:st.ref}));
+  sDel(DRAFT_KEY); S=null;
+  try{ if(document.fullscreenElement&&document.exitFullscreen) document.exitFullscreen(); }catch(e){}
+  $('#modalRoot').innerHTML='';
+  await submitPending();
+}
+async function submitPending(){
+  const raw=sGet(PENDING_KEY); if(!raw) return;
+  const p=JSON.parse(raw);
+  phase='finalizing';
+  renderBusy('<h2>Submitting your examination…</h2><div class="notice blue">Please keep this page open and stay connected to the internet.</div>');
+  let res=null;
+  for(let i=0;i<4&&!(res&&res.ok);i++){ res=await serverCall(p.payload,25000); if(!(res&&res.ok)) await sleep(2500); }
+  if(!(res&&res.ok)){
+    renderBusy('<h2>Not submitted yet</h2><div class="notice red"><b>Could not complete the submission'+(res&&res.error?' ('+esc(res.error)+')':'')+'.</b> Your answers are saved on this device. Connect to the internet and press Try again. Do not clear your browsing data.</div><div class="row"><button type="button" class="btn green" id="btnRetry">Try again</button></div>');
+    $('#btnRetry').onclick=submitPending; return;
+  }
+  sDel(PENDING_KEY);
+  const r=Object.assign({},res.result,{token:p.token});
+  if(!/^TEST-/i.test(r.sr)){ sSet(attemptKey(r.sr),JSON.stringify(r)); sSet(deviceKey,JSON.stringify(r)); }
+  showSubmitted(r);
+}
+
+/* ---------- anti-cheat (best effort) ---------- */
+let away=false, pendingWarn=false;
+function logInc(kind,label,action){ if(!S) return; (S.incidents=S.incidents||[]).push({kind,label,action,at:Date.now()}); saveDraft(); }
+function violate(kind,label){
+  if(phase!=='exam'||!S||!C.antiCheat.enabled||!C.antiCheat.terminateOnLeave||away) return;
+  away=true;
+  if(!S.warnings){
+    S.warnings=1; S.firstLeave={type:label,at:Date.now()}; logInc(kind,label,'Warning issued (1 of 2)'); pendingWarn=true;
+    if(document.visibilityState==='visible'&&document.hasFocus()) showWarn();
+    return;
+  }
+  S.violation={type:label, at:Date.now()}; logInc(kind,label,'Examination terminated');
+  finalize('Terminated – Policy Violation');
+}
+function showWarn(){
+  if(!pendingWarn||phase!=='exam') return;
+  pendingWarn=false;
+  const close=openModal(`<h2 id="mt">⚠ Warning 1 of 2</h2>
+    <div class="notice red">You left the exam page at <b>${esc(fmtDT(S.firstLeave.at))}</b>.<br><br><b>If you leave the page a second time, your exam will be terminated</b> and your saved answers will be submitted automatically as “Terminated – Policy Violation”.</div>
+    <div class="row"><button type="button" class="btn" id="mOk">I understand, continue exam</button></div>`);
+  $('#mOk').onclick=()=>{ close(); away=false; };
+}
+function backInPage(){ if(phase==='exam'&&pendingWarn) showWarn(); else if(phase==='exam'&&S&&S.warnings&&!$('.modal')) away=false; }
+/* keep the screen awake during the exam so auto-lock does not trigger a warning */
+let wakeLock=null;
+async function keepAwake(){ try{ if(phase==='exam'&&'wakeLock' in navigator&&document.visibilityState==='visible'&&!wakeLock){ wakeLock=await navigator.wakeLock.request('screen'); wakeLock.addEventListener('release',()=>{ wakeLock=null; }); } }catch(e){ wakeLock=null; } }
+document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='visible') keepAwake(); });
+document.addEventListener('click',keepAwake);
+document.addEventListener('touchstart',keepAwake,{passive:true});
+document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='hidden') violate('switch','Tab or app switched, or window minimized'); else backInPage(); });
+let blurT=null;
+window.addEventListener('blur',()=>{
+  if(phase!=='exam') return;
+  clearTimeout(blurT);
+  blurT=setTimeout(()=>{ if(phase==='exam'&&!document.hasFocus()) violate('blur','Window lost focus'); },600);
+});
+window.addEventListener('focus',()=>{ clearTimeout(blurT); backInPage(); });
+window.addEventListener('beforeunload',e=>{
+  if(phase==='exam'&&C.antiCheat.enabled&&C.antiCheat.warnOnNavigation){ logInc('attempt','Attempted to refresh, close or leave the page','Logged (browser confirmation shown)'); e.preventDefault(); e.returnValue=''; return ''; }
+});
+window.addEventListener('popstate',()=>{
+  if(phase==='exam'&&C.antiCheat.warnOnNavigation){ try{history.pushState({exam:1},'',location.href);}catch(e){} toast('Back navigation is disabled during the exam.'); }
+});
+document.addEventListener('fullscreenchange',()=>{ if(phase==='exam'&&!document.fullscreenElement) toast('Fullscreen ended. This is not a violation.'); });
+
+/* =====================  SUBMISSION + RESULT PDF  ===================== */
+function showSubmitted(r){
+  phase='result';lastResult=r;clearInterval(tick);
+  const locked=!!r.resultsLocked;
+  const banner=r.status==='Submitted'?'Examination successfully submitted. Your answers are permanently locked.':esc(r.status)+'. Your examination attempt is permanently locked.';
+  $('#app').innerHTML=`<main class="wrap"><section class="card">
+    <div class="notice green"><b>${banner}</b></div>
+    <h2>${locked?'Result Slip available at 11:00 PM':'Examination Result Slip'}</h2>
+    <p>${locked?'Your score, rating and PDF are locked until October 18, 2026 at 11:00 PM (Philippine Time). You may close this page after submission confirmation and return later.':'Your examination has been recorded. You may download your result PDF below.'}</p>
+    ${locked?'':'<div class="row"><button class="btn green" id="btnDl" type="button">Download Result PDF</button></div>'}
+    <div id="dlMsg" role="status"></div>
+    <table class="meta"><tr><th>Student</th><td>${esc(r.name)}</td></tr><tr><th>SR Code</th><td>${esc(r.sr)}</td></tr><tr><th>Section</th><td>${esc(r.section)}</td></tr><tr><th>Reference ID</th><td><b>${esc(r.ref)}</b></td></tr><tr><th>Submission Status</th><td>${esc(r.status)}</td></tr></table>
+    <div class="notice blue"><b>Keep your Reference ID.</b> To return after 11:00 PM, use “Retrieve Result Slip” with your SR Code, access code and Reference ID. Retrieving a result does not permit another attempt.</div>
+    <button class="btn gray" id="btnHome" type="button">Return to Login / Retrieval</button>
+  </section></main>`;
+  const dl=$('#btnDl');if(dl)dl.onclick=()=>downloadResult(lastResult);
+  $('#btnHome').onclick=()=>renderIntro('');window.scrollTo(0,0);
+}
+async function downloadResult(r){
+  const msg=$('#dlMsg');msg.innerHTML='<div class="notice blue">Checking release time with server…</div>';
+  const res=r.retrieval?await serverCall({action:'retrieve',...r.retrieval},25000):await serverCall({action:'result',sr:r.sr,token:r.token},25000);
+  if(!res||!res.ok){msg.textContent=(res&&res.error)||'Unable to retrieve your result. Please retry.';return;}
+  if(res.locked||res.result?.resultsLocked){msg.textContent='Result slips are locked until 11:00 PM Philippine Time.';return;}
+  const full=Object.assign({},res.result,{exam:C.examTitle,course:C.course,facilitator:C.facilitator,period:C.academicPeriod,examDate:C.officialExamLabel,items:null,reviewNote:'Correct answers and explanations are not released.'});
+  try {const blob=buildResultPDF(full),url=URL.createObjectURL(blob),name='BAT405_Midterm_Result_'+r.sr.replace(/[^A-Za-z0-9_-]+/g,'_')+'.pdf';
+    const a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();
+    msg.innerHTML='<div class="notice green">Result PDF generated. Check your Downloads folder.</div>';
+    setTimeout(()=>URL.revokeObjectURL(url),60000);
+  }catch(e){msg.textContent='PDF generation failed. Please try again.';}
+}
+
+/* ---------- Result Slip PDF: real text PDF, no libraries (Helvetica, WinAnsi) ---------- */
+const PDF_W1=[278,278,355,556,556,889,667,191,333,333,389,584,278,333,278,278,556,556,556,556,556,556,556,556,556,556,278,278,584,584,584,556,1015,667,667,722,722,667,611,778,722,278,500,667,556,833,722,778,667,778,722,667,611,722,667,944,667,667,611,278,278,278,469,556,333,556,556,500,556,556,278,556,556,222,222,500,222,833,556,556,556,556,333,500,278,556,500,722,500,500,500,334,260,334,584];
+const PDF_W2=[278,333,474,556,556,889,722,238,333,333,389,584,278,333,278,278,556,556,556,556,556,556,556,556,556,556,333,333,584,584,584,611,975,722,722,722,722,667,611,778,722,278,556,722,611,833,722,778,667,778,722,667,611,722,667,944,667,667,611,333,278,333,584,556,333,556,611,556,611,556,333,611,611,278,278,556,278,889,611,611,611,611,389,556,333,611,556,778,556,556,500,389,280,389,584];
+const PDF_MAP={'–':0x96,'—':0x97,'‘':0x91,'’':0x92,'“':0x93,'”':0x94,'•':0x95,'·':0xB7,'×':0xD7,'÷':0xF7,'…':0x85};
+const PDF_SPW={'–':[556,556],'—':[1000,1000],'‘':[222,278],'’':[222,278],'“':[333,500],'”':[333,500],'•':[350,350],'·':[278,278],'×':[584,584],'÷':[584,584],'…':[1000,1000]};
+function controlCode(r){
+  const s=[r.ref,r.sr,r.name,r.score,r.total,r.grade,r.submittedAt,(r.incidents||[]).length].join('|'); let h=2166136261;
+  for(let i=0;i<s.length;i++){ h^=s.charCodeAt(i); h=Math.imul(h,16777619); }
+  const x=('00000000'+(h>>>0).toString(16)).slice(-8).toUpperCase(); return x.slice(0,4)+'-'+x.slice(4);
+}
+function buildResultPDF(r){
+  const PW=595.28, PH=841.89, M=40, CW=PW-2*M, BOT=PH-54, FN={r:'F1',b:'F2',i:'F3'};
+  const pages=[]; let cur=null, y=0; const code=r.control||controlCode(r);
+  const sn=s=>String(s==null?'':s).replace(/[\u00a0\u2007\u2009\u202f]/g,' ');
+  const col=h=>{ h=h.replace('#',''); return [0,2,4].map(i=>(parseInt(h.substr(i,2),16)/255).toFixed(3)).join(' '); };
+  const hex=s=>{ let o=''; for(const ch of sn(s)){ const c=ch.charCodeAt(0); let b=PDF_MAP[ch]; if(b===undefined) b=((c>=32&&c<=126)||(c>=160&&c<=255))?c:63; o+=b.toString(16).padStart(2,'0'); } return o; };
+  const cw=(ch,bold)=>{ const c=ch.charCodeAt(0); if(c>=32&&c<=126) return (bold?PDF_W2:PDF_W1)[c-32]; const o=PDF_SPW[ch]; return o?(bold?o[1]:o[0]):556; };
+  const tw=(s,f,size)=>{ let w=0; for(const ch of sn(s)) w+=cw(ch,f==='b'); return w*size/1000; };
+  const rect=(x,t,w,h,fill,stroke,lw)=>{ let o=''; if(fill) o+=col(fill)+' rg '; if(stroke) o+=col(stroke)+' RG '+(lw||0.6)+' w ';
+    o+=x.toFixed(2)+' '+(PH-t-h).toFixed(2)+' '+w.toFixed(2)+' '+h.toFixed(2)+' re '+(fill&&stroke?'B':(fill?'f':'S')); cur.push(o); };
+  const ln=(x1,t1,x2,t2,c,lw)=>cur.push(col(c)+' RG '+lw+' w '+x1.toFixed(2)+' '+(PH-t1).toFixed(2)+' m '+x2.toFixed(2)+' '+(PH-t2).toFixed(2)+' l S');
+  const tx=(s,x,t,f,size,c,al)=>{ let X=x; if(al==='r') X=x-tw(s,f,size); else if(al==='c') X=x-tw(s,f,size)/2;
+    cur.push('BT /'+FN[f]+' '+size+' Tf '+col(c)+' rg '+X.toFixed(2)+' '+(PH-t).toFixed(2)+' Td <'+hex(s)+'> Tj ET'); };
+  function wrapT(s,f,size,maxW){
+    const out=[]; sn(s).split('\n').forEach(par=>{
+      let line=''; const words=par.split(/\s+/).filter(Boolean);
+      if(!words.length){ out.push(''); return; }
+      words.forEach(w=>{
+        while(tw(w,f,size)>maxW){ let k=w.length; while(k>1&&tw(w.slice(0,k),f,size)>maxW) k--; if(line){ out.push(line); line=''; } out.push(w.slice(0,k)); w=w.slice(k); }
+        const t=line?line+' '+w:w; if(tw(t,f,size)>maxW&&line){ out.push(line); line=w; } else line=t;
+      }); out.push(line);
+    }); return out;
+  }
+  function newPage(){
+    cur=[]; pages.push(cur); y=M;
+    if(pages.length>1){ tx(C.course+'  ·  Examination Result Slip',M,28,'r',8,'#5d656d'); tx(r.name+'  ·  '+r.sr,PW-M,28,'r',8,'#5d656d','r'); ln(M,34,PW-M,34,'#922222',1); y=52; }
+  }
+  const ensure=h=>{ if(y+h>BOT) newPage(); };
+  function sec(letter,title){ ensure(60); rect(M,y,CW,22,'#30353A'); rect(M,y,5,22,'#922222'); tx('SECTION '+letter+'   |   '+title.toUpperCase(),M+16,y+15,'b',9,'#ffffff'); y+=30; }
+
+  /* ---- masthead ---- */
+  newPage();
+  rect(0,0,PW,98,'#30353A'); rect(0,98,PW,4,'#922222');
+  tx(C.systemTitle,M,30,'b',8.5,'#c3c9cf'); tx('EXAMINATION RESULT SLIP',M,60,'b',22,'#ffffff'); tx(r.course+'  ·  '+r.period,M,80,'r',10,'#dfe3e6');
+  tx('REFERENCE ID',PW-M,30,'b',7.5,'#c3c9cf','r'); tx(r.ref,PW-M,45,'b',11,'#ffffff','r');
+  tx('CONTROL CODE',PW-M,65,'b',7.5,'#c3c9cf','r'); tx(code,PW-M,80,'b',11,'#ffffff','r');
+  y=126; wrapT(r.exam,'b',13,CW).forEach(l=>{ tx(l,M,y,'b',13,'#922222'); y+=17; }); y+=4;
+
+  /* ---- A. examinee ---- */
+  sec('A','Examinee and Examination Details');
+  const half=CW/2, LW=84;
+  const pairs=[
+    [['Examinee Name',r.name],['SR Code',r.sr]],
+    [['Section',r.section],['Course',r.course]],
+    [['Facilitator',r.facilitator],['Academic Period',r.period]],
+    [['Examination Date',r.examDate],['Time Spent',fmtDur(r.timeSpent)]],
+    [['Started',fmtDT(r.startedAt)],['Submitted',fmtDT(r.submittedAt)]],
+    [['Reference ID',r.ref],['Exam Status',r.status]]
+  ];
+  pairs.forEach(row=>{
+    const L=row.map(c=>wrapT(c[1],'r',9,half-LW-14)), h=Math.max(...L.map(l=>l.length))*12+10; ensure(h);
+    row.forEach((c,k)=>{ const x=M+k*half; rect(x,y,LW,h,'#f3f4f6','#cfd4d9'); rect(x+LW,y,half-LW,h,'#ffffff','#cfd4d9');
+      tx(c[0],x+8,y+14,'b',8.5,'#30353A'); L[k].forEach((l,i)=>tx(l,x+LW+8,y+14+i*12,'r',9,'#22272b')); });
+    y+=h;
+  });
+  y+=16;
+
+  /* ---- B. results ---- */
+  sec('B','Summary of Results');
+  ensure(190);
+  const gap=10, c3=(CW-2*gap)/3, pct=r.score/r.total*100;
+  [
+    {l:'MIDTERM SCORE',v:r.score+' / '+r.total,s:'Points earned out of total points',bg:'#fafbfb',lc:'#5d656d',vc:'#922222'},
+    {l:'MIDTERM RATING',v:String(r.grade),s:(parseFloat(r.grade)>=75?'Passed':'Failed')+' · Passing: 75',bg:(parseFloat(r.grade)>=75?'#1e7e34':'#c62828'),lc:'#ffffff',vc:'#ffffff'},
+    {l:'PERCENT CORRECT',v:pct.toFixed(1)+'%',s:'Raw score as a percentage',bg:'#fafbfb',lc:'#5d656d',vc:'#922222'}
+  ].forEach((c,i)=>{ const x=M+i*(c3+gap); rect(x,y,c3,74,c.bg,'#cfd4d9'); tx(c.l,x+c3/2,y+18,'b',8,c.lc,'c'); tx(c.v,x+c3/2,y+47,'b',24,c.vc,'c'); tx(c.s,x+c3/2,y+64,'r',7.5,c.lc,'c'); });
+  y+=74+gap;
+  const c4=(CW-3*gap)/4;
+  [['Total Items',r.correct+r.incorrect+r.unanswered,'#30353A'],['Correct',r.correct,'#17642a'],['Incorrect',r.incorrect,'#c62828'],['Unanswered',r.unanswered,'#5d656d']].forEach((c,i)=>{
+    const x=M+i*(c4+gap); rect(x,y,c4,46,'#ffffff','#cfd4d9'); rect(x,y,4,46,c[2]); tx(String(c[1]),x+c4/2,y+22,'b',16,c[2],'c'); tx(c[0].toUpperCase(),x+c4/2,y+37,'b',7,'#5d656d','c'); });
+  y+=46+gap;
+  const div=r.divisor||r.total;
+  rect(M,y,CW,58,'#f6f7f8','#cfd4d9');
+  tx('COMPUTATION OF MIDTERM RATING',M+12,y+16,'b',8,'#30353A');
+  tx('Rating = (Score ÷ '+div+' × '+C.grading.span+') + '+C.grading.base,M+12,y+31,'r',9,'#22272b');
+  tx('Rating = ('+r.score+' ÷ '+div+' × '+C.grading.span+') + '+C.grading.base+'  =  '+r.grade,M+12,y+46,'b',9.5,parseFloat(r.grade)>=75?'#1e7e34':'#c62828');
+  y+=58+18;
+
+  /* ---- C. integrity ---- */
+  const inc=r.incidents||[], cnt=k=>inc.filter(x=>x.kind===k).length, terminated=/Terminated/.test(r.status);
+  sec('C','Examination Integrity Record');
+  const clean=inc.length===0;
+  const bt=clean?'No integrity incidents were recorded during this examination.':inc.length+' integrity incident'+(inc.length>1?'s were':' was')+' recorded during this examination.'+(terminated?' The examination was terminated under the policy violation rule.':'');
+  { const L=wrapT(bt,'b',9,CW-30), h=L.length*13+14, bg=clean?'#eaf7ee':(terminated?'#fdecec':'#fff7e8'), bc=clean?'#28A745':(terminated?'#c62828':'#b26a00'); ensure(h+70);
+    rect(M,y,CW,h,bg,'#cfd4d9'); rect(M,y,5,h,bc); L.forEach((l,k)=>tx(l,M+16,y+16+k*13,'b',9,'#22272b')); y+=h+10; }
+  const cats=[['Tab / app switches','switch'],['Window focus lost','blur'],['Refresh / close attempts','attempt'],['Page reloaded / reopened','reload']];
+  cats.forEach((c,i)=>{ const x=M+i*(c4+gap), n=cnt(c[1]); rect(x,y,c4,46,'#ffffff','#cfd4d9'); tx(String(n),x+c4/2,y+22,'b',16,n?'#c62828':'#17642a','c'); tx(c[0].toUpperCase(),x+c4/2,y+37,'b',6.5,'#5d656d','c'); });
+  y+=46+10;
+  { const w=[(r.warnings||0)+' warning'+((r.warnings||0)===1?'':'s')+' issued','Examination terminated: '+(terminated?'Yes':'No')];
+    tx(w.join('     ·     '),M,y+9,'r',8.5,'#30353A'); y+=22; }
+  const cwid=[26,128,236,CW-26-128-236], hd=['No.','Date and Time','Event Detected','Action Taken'];
+  ensure(60); rect(M,y,CW,19,'#30353A'); { let x=M; hd.forEach((h,i)=>{ tx(h.toUpperCase(),x+7,y+13,'b',7.5,'#ffffff'); x+=cwid[i]; }); } y+=19;
+  if(!inc.length){ rect(M,y,CW,24,'#ffffff','#cfd4d9'); tx('No incidents recorded.',M+7,y+15,'i',9,'#5d656d'); y+=24; }
+  else inc.forEach((e,k)=>{
+    const cells=[String(k+1),fmtDT(e.at),e.label,e.action], L=cells.map((t,i)=>wrapT(t,'r',8.5,cwid[i]-12)), h=Math.max(...L.map(l=>l.length))*11.5+10; ensure(h);
+    let x=M; cells.forEach((t,i)=>{ rect(x,y,cwid[i],h,k%2?'#f8f9fa':'#ffffff','#cfd4d9'); L[i].forEach((l,j)=>tx(l,x+7,y+14+j*11.5,i===3&&/terminat/i.test(t)?'b':'r',8.5,i===3&&/terminat/i.test(t)?'#c62828':'#22272b')); x+=cwid[i]; });
+    y+=h;
+  });
+  y+=6; wrapT('Events are detected by the browser on a best-effort basis.','i',8,CW).forEach(l=>{ ensure(12); tx(l,M,y+9,'i',8,'#5d656d'); y+=11; });
+  y+=14;
+
+  /* ---- D. item review ---- */
+  sec('D','Item-by-Item Review');
+  const colr={c:'#28A745',w:'#c62828',u:'#8a939b'}, lab={c:'Correct',w:'Incorrect',u:'Unanswered'};
+  const term=/Terminated/.test(r.status);
+  (r.items||[]).forEach(i=>{
+    const IW=CW-30;
+    const g=i.group?wrapT('Matching set: '+i.group,'i',8,IW):[], pr=wrapT(i.prompt,'b',9.5,IW),
+      ya=wrapT('Your answer: '+(i.chosen===null?'No answer':i.chosen),'r',9,IW), ca=term?[]:wrapT('Correct answer: '+i.correct,'b',9,IW), ex=(term||!i.explanation)?[]:wrapT('Explanation: '+i.explanation,'i',8.5,IW);
+    const h=10+16+g.length*11+pr.length*13+4+ya.length*12+ca.length*12+4+ex.length*11.5+10;
+    ensure(h+8);
+    rect(M,y,CW,h,'#ffffff','#cfd4d9'); rect(M,y,5,h,term?'#8a939b':colr[i.state]);
+    let yy=y+10;
+    tx('ITEM '+i.no+'  ·  '+i.kind.toUpperCase(),M+17,yy+10,'b',7.5,'#5d656d');
+    tx(term?(i.chosen===null?'UNANSWERED':'ANSWERED'):lab[i.state].toUpperCase()+'  ·  '+i.earned+' / '+i.points+' pt'+(i.points>1?'s':''),M+CW-10,yy+10,'b',7.5,term?'#5d656d':colr[i.state],'r'); yy+=16;
+    const block=(arr,f,size,c,lh)=>{ arr.forEach((l,k)=>tx(l,M+17,yy+lh*0.8+k*lh,f,size,c)); yy+=arr.length*lh; };
+    block(g,'i',8,'#5d656d',11); block(pr,'b',9.5,'#22272b',13); yy+=4;
+    block(ya,'r',9,(!term&&i.state==='w')?'#c62828':'#22272b',12); block(ca,'b',9,'#17642a',12); yy+=4;
+    block(ex,'i',8.5,'#5d656d',11.5);
+    y+=h+8;
+  });
+  if(!r.items||!r.items.length){
+    const L=wrapT(r.reviewNote||'The item-by-item review is not included in this Result Slip.','r',9,CW-30), h=L.length*13+14; ensure(h+10);
+    rect(M,y,CW,h,'#f6f7f8','#cfd4d9'); rect(M,y,5,h,'#8a939b'); L.forEach((l,k)=>tx(l,M+16,y+16+k*13,'r',9,'#22272b')); y+=h+8;
+  }
+  y+=8;
+
+  /* ---- E. remarks ---- */
+  ensure(190); sec('E','Remarks and Verification');
+  const notes=['This Result Slip was generated automatically by the '+C.systemTitle+' from the examinee’s recorded session. The Midterm Rating is computed as (Midterm Score ÷ '+div+' × '+C.grading.span+') + '+C.grading.base+'.',
+    'This Result Slip serves as the examinee’s acknowledgement of the answers submitted and the results shown.'];
+  notes.forEach(t=>{ wrapT(t,'r',8.5,CW).forEach(l=>{ tx(l,M,y+9,'r',8.5,'#30353A'); y+=12; }); y+=4; });
+  y+=34; const sw=(CW-40)/2;
+  ln(M,y,M+sw,y,'#30353A',0.8); ln(M+sw+40,y,M+CW,y,'#30353A',0.8);
+  tx('Examinee’s Signature over Printed Name',M,y+12,'r',8,'#5d656d'); tx('Noted by: Facilitator',M+sw+40,y+12,'r',8,'#5d656d');
+  tx('(sgd.)',M,y-20,'i',8.5,'#22272b'); tx(r.name,M,y-5,'b',8.5,'#22272b'); tx('(sgd.)',M+sw+40,y-20,'i',8.5,'#22272b'); tx(String(r.facilitator).toUpperCase(),M+sw+40,y-5,'b',9,'#22272b'); y+=24;
+  tx('Date: '+new Date(r.submittedAt).toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'}),M,y+10,'r',8.5,'#22272b'); tx('Date: October 21, 2026',M+sw+40,y+10,'r',8.5,'#22272b');
+
+  /* ---- footers ---- */
+  pages.forEach((p,i)=>{ cur=p; ln(M,PH-42,PW-M,PH-42,'#cfd4d9',0.6);
+    tx(r.course+'  ·  Ref '+r.ref+'  ·  Control '+code,M,PH-30,'r',7.5,'#5d656d'); tx('Page '+(i+1)+' of '+pages.length,PW-M,PH-30,'b',7.5,'#5d656d','r'); });
+
+  /* ---- assemble ---- */
+  const N=pages.length; let out='%PDF-1.4\n'; const offs=[];
+  const obj=(n,b)=>{ offs[n]=out.length; out+=n+' 0 obj\n'+b+'\nendobj\n'; };
+  const asc=s=>String(s).replace(/[^\x20-\x7e]/g,'-').replace(/([()\\])/g,'\\$1');
+  const d=new Date(r.submittedAt), p2=n=>String(n).padStart(2,'0');
+  obj(1,'<< /Type /Catalog /Pages 2 0 R >>');
+  obj(2,'<< /Type /Pages /Count '+N+' /Kids ['+pages.map((p,k)=>(7+2*k)+' 0 R').join(' ')+'] >>');
+  obj(3,'<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>');
+  obj(4,'<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>');
+  obj(5,'<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Oblique /Encoding /WinAnsiEncoding >>');
+  obj(6,'<< /Title ('+asc('Result Slip - '+r.sr+' - '+r.ref)+') /Author ('+asc(C.systemTitle)+') /Subject ('+asc(r.exam)+') /CreationDate (D:'+d.getFullYear()+p2(d.getMonth()+1)+p2(d.getDate())+p2(d.getHours())+p2(d.getMinutes())+p2(d.getSeconds())+') >>');
+  pages.forEach((p,k)=>{ const stream=p.join('\n');
+    obj(7+2*k,'<< /Type /Page /Parent 2 0 R /MediaBox [0 0 '+PW+' '+PH+'] /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R >> >> /Contents '+(8+2*k)+' 0 R >>');
+    obj(8+2*k,'<< /Length '+stream.length+' >>\nstream\n'+stream+'\nendstream'); });
+  const total=7+2*N, xr=out.length; out+='xref\n0 '+total+'\n0000000000 65535 f \n';
+  for(let n=1;n<total;n++) out+=String(offs[n]).padStart(10,'0')+' 00000 n \n';
+  out+='trailer\n<< /Size '+total+' /Root 1 0 R /Info 6 0 R >>\nstartxref\n'+xr+'\n%%EOF';
+  return new Blob([out],{type:'application/pdf'});
+}
+
+/* =====================  BOOT  ===================== */
+(function boot(){
+  if(sGet(PENDING_KEY)){ submitPending(); return; }
+  const raw=sGet(DRAFT_KEY);
+  if(raw){
+    try{
+      S=JSON.parse(raw); QUESTIONS=S.screens||[]; prepare();
+      if(C.antiCheat.enabled && C.antiCheat.onReload==='terminate'){
+        const lbl='Page reloaded or reopened during the exam';
+        phase='exam'; S.violation={type:lbl,at:Date.now()};
+        logInc('reload',lbl,'Examination terminated');
+        finalize('Terminated – Policy Violation'); return;
+      }
+      logInc('reload','Page reloaded or reopened during the exam','Logged (exam resumed)');
+      beginExamPhase(); return;
+    }catch(e){ sDel(DRAFT_KEY); S=null; }
+  }
+  renderIntro(storageOK?'':'<div class="notice red">Browser storage is unavailable. Results will not be saved after you close this page, and duplicate-attempt checks will not persist.</div>');
+})();
+})();
+</script>
+</body>
+</html>
